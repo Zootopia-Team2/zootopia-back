@@ -14,7 +14,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import dev.team2.zoopoli.Services.JpaUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
@@ -22,6 +25,12 @@ public class SecurityConfiguration {
 
     @Value("${api-endpoint}")
     String endpoint;
+
+    JpaUserDetailsService jpaUserDetailsService;
+
+    public SecurityConfiguration(JpaUserDetailsService jpaUserDetailsService) {
+        this.jpaUserDetailsService = jpaUserDetailsService;
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -34,13 +43,14 @@ public class SecurityConfiguration {
                         .logoutUrl(endpoint + "/logout")
                         .deleteCookies("JSESSIONID"))
                 .authorizeHttpRequests(auth -> auth
-                       // .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()   // CAMBIAR en producción!! Acceso a H2 sólo durante el desarrollo 
-                        .requestMatchers(HttpMethod.GET, endpoint + "/users/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, endpoint + "/users/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT, endpoint + "/users/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, endpoint + "/users/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, endpoint + "/login").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, endpoint + "/users/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, endpoint + "/users/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, endpoint + "/animals/**").permitAll()
+                        .requestMatchers(endpoint + "/animals/**").hasRole("ADMIN")
                         .requestMatchers(endpoint + "/users/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
+                .userDetailsService(jpaUserDetailsService)
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
@@ -49,26 +59,20 @@ public class SecurityConfiguration {
 
         return http.build();
     }
-    
-    
-    @Bean
-    CorsConfigurationSource CorsConfigurationSource(){
-            CorsConfiguration configuration = new CorsConfiguration();
-            configuration.setAllowCredentials(true);
-            configuration.setAllowedOrigins(Arrays.asList("http:localhost:5173"));
-            configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELTE"));
-            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-            source.registerCorsConfiguration(("/**"), configuration);
-            return source;
-            
-            @Bean
-            PasswordEncoder passwordEncoder(){
-                    return new BCryptPasswordEncoder()
-                }
-                
-                
-                
-                
-        }
 
+    @Bean
+    CorsConfigurationSource CorsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedOrigins(Arrays.asList("http:localhost:5173"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration(("/**"), configuration);
+        return source;
+    }
+
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }

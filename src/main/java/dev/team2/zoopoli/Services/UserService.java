@@ -10,14 +10,16 @@ import dev.team2.zoopoli.Repositories.UserRepository;
 
 @Service
 public class UserService {
-    private UserRepository repository;
+
+    UserRepository repository;
 
     public UserService(UserRepository repository) {
         this.repository = repository;
     }
  
     public List<User> getAll() {
-        return repository.findAll();
+        List<User> users = repository.findAll();
+        return users;
     }
 
     public User save(@NonNull User newUser) {
@@ -25,13 +27,13 @@ public class UserService {
         return userSaved;
     }
 
-    public User findById(Long id) {
+/*     public User findById(Long id) {
         return repository.findById(id).orElse(null);        
     }    
 
     public void delete(Long id){
         repository.deleteById(id);
     }
-    
+     */
     
 }
