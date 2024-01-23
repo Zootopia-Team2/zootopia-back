@@ -2,6 +2,8 @@ package dev.team2.zoopoli.Services;
 
 import dev.team2.zoopoli.Models.Animal;
 import dev.team2.zoopoli.Repositories.AnimalRepository;
+import lombok.NonNull;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,15 +20,15 @@ public class AnimalService {
         return animalRepository.findAll();
     }
 
-    public Optional<Animal> getAnimalById(Long id) {
+    public Optional<Animal> getAnimalById(@NonNull Long id) {
         return animalRepository.findById(id);
     }
 
-    public Animal saveAnimal(Animal animal) {
+    public Animal saveAnimal(@NonNull Animal animal) {
         return animalRepository.save(animal);
     }
 
-    public void deleteAnimalById(Long id) {
+    public void deleteAnimalById(@NonNull Long id) {
         animalRepository.deleteById(id);
     }
 

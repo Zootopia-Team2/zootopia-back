@@ -44,11 +44,7 @@ public class SecurityConfiguration {
                         .deleteCookies("JSESSIONID"))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, endpoint + "/login").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, endpoint + "/users/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, endpoint + "/users/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, endpoint + "/animals/**").permitAll()
                         .requestMatchers(endpoint + "/animals/**").hasRole("ADMIN")
-                        .requestMatchers(endpoint + "/users/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .userDetailsService(jpaUserDetailsService)
                 .httpBasic(Customizer.withDefaults())

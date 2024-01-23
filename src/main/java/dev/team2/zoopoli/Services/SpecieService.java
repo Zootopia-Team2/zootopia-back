@@ -3,6 +3,8 @@ package dev.team2.zoopoli.Services;
 
 import dev.team2.zoopoli.Models.Specie;
 import dev.team2.zoopoli.Repositories.SpecieRepository;
+import lombok.NonNull;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,15 +21,15 @@ public class SpecieService {
         return specieRepository.findAll();
     }
 
-    public Optional<Specie> getSpecieById(Long id) {
+    public Optional<Specie> getSpecieById(@NonNull Long id) {
         return specieRepository.findById(id);
     }
 
-    public Specie saveSpecie(Specie specie) {
+    public Specie saveSpecie(@NonNull Specie specie) {
         return specieRepository.save(specie);
     }
 
-    public void deleteSpecieById(Long id) {
+    public void deleteSpecieById(@NonNull Long id) {
         specieRepository.deleteById(id);
     }
 }
