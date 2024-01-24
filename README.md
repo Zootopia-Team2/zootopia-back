@@ -23,8 +23,7 @@ mvn spring-boot:run
 ## Colaboradores
 
 - [Rebeca Férnandez](https://github.com/RebecaMFep)
-- [Borja Fernández](https://github.com/BarmanDev)
 - [David Colunga](https://github.com/Colunga-D)
 - [Eva López](https://github.com/EvaMLopez)
 - [Ana García](https://github.com/anagarlopez)
-  
+- [Borja Fernández](https://github.com/BarmanDev)
